@@ -1,0 +1,75 @@
+---
+title: "Probabilidad clásica y muestreo aleatorio simple en R: función sample()"
+subtitle: "Universidad Nacional Autónoma de México, Facultad de Economía"
+author: "Profesor: Cesar Hernández"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2) # Para usar ggplot
+library(plotly) # Para usar ggplotly
+```
+
+### Creando una tabla de muestras aleatorias del lanzamiento de una moneda con la función sample
+
+```{r}
+# Creando el vector moneda
+moneda <- c("Águila", "Sol") 
+# Creando 5 muestras aleatorias simples con la función sample
+muestra1 <- sample(moneda, 100, T)
+muestra2 <- sample(moneda, 500, T)
+muestra3 <- sample(moneda, 1000, T)
+muestra4 <- sample(moneda, 5000, T)
+muestra5 <- sample(moneda, 10000, T)
+# Creando una tabla de frecuencias para cada muestra
+muestra1 <- table(muestra1)
+muestra2 <- table(muestra2)
+muestra3 <- table(muestra3)
+muestra4 <- table(muestra4)
+muestra5 <- table(muestra5)
+# Creando un data frame de frecuencias para las 5 muestras
+frecuencias <- data.frame(cbind(muestra1, muestra2, muestra3, muestra4, muestra5))
+frecuencias
+```
+
+### Transformando nuestra tabla de frecuencias absolutas en una tabla de frecuencias relativas
+
+```{r}
+# Creando una trabla de frecuencias relaticas con las funciones transform y prop.table
+f_relativas <- transform(frecuencias, muestra1 = prop.table(muestra1),
+                         muestra2 = prop.table(muestra2),
+                         muestra3 = prop.table(muestra3),
+                         muestra4 = prop.table(muestra4),
+                         muestra5 = prop.table(muestra5))
+# Transponiendo el data frame de frecuencias relativas con la función t
+f_relativas <- data.frame(t(f_relativas))
+f_relativas
+```
+
+### Añadiendo la columna "Muestra" a nuestra tabla
+
+```{r}
+# Agregando la columna Muestra a nuestro data frame de frecuencias relativas
+f_relativas <- data.frame(f_relativas, Muestra = 1:5)
+f_relativas
+```
+
+### Graficando el número de la muestra y la frecuencia relativa  
+
+```{r}
+# Creando un gráfico con la función ggplot
+ggplot() + geom_line(data = f_relativas, aes(x = Muestra, y = Águila), color = "blue") + geom_line(data = f_relativas, aes(x = Muestra, y = Sol), color = "red") + xlab("Muestra") + ylab("Porcentaje")
+```
+
+### Generando una gráfica interactiva
+
+```{r}
+# Creando un gráfico interactivo con la función ggplotly
+grafica <- ggplot() + geom_line(data = f_relativas, aes(x = Muestra, y = Águila), color = "blue") + geom_line(data = f_relativas, aes(x = Muestra, y = Sol), color = "red") + xlab("Muestra") + ylab("Porcentaje")
+ggplotly(grafica)
+```
+
+Este script fue generado mediante R en `r format(Sys.Date(), format = "%B %d, %Y")` y forma parte de las actividades realizadas en las materias de Estadística y Taller IV.
+Facultad de Economía, Ciudad Universitaria.
+Contacto: cghv94@outlook.es y @[cghv94](https://twitter.com/cghv94). Esta obra está bajo una [licencia de Creative Commons, Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.es). Creative Commons (CC).
